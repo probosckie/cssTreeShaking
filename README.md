@@ -21,8 +21,10 @@ Then you can have this problem that
 1. Every developer is creating their own styles in styles.css, since there is no global style availble. 
 2. Stylessheets will keep on increasing in size - since no developer will ever delete any style rule. This can cause:
 
-   a. Unused classes  - which are declared in css - but not used in index.js \n
-   b. Classes defined in jsx but don't have definition in css \n
+   a. Unused classes  - which are declared in css - but not used in index.js
+   
+   b. Classes defined in jsx but don't have definition in css 
+   
    c. Empty classes in styles.css (which have no body)
    
    
