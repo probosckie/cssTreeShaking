@@ -1,0 +1,27 @@
+.flexContainer{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content: space-between;
+}
+
+.reviewsContainer {
+  margin-top: 28px;
+  width:100%;
+  border-top: solid 1px #e3e6e6;
+  padding-top: 23px;
+
+}
+
+.loaderContainer {
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
+.loader {
+  position: relative;
+  margin: 0 auto;
+  width: 50px;
+}
