@@ -5,8 +5,10 @@ A project to statically analyse and prune redundant classname declarations and c
 If you are using React 15 and using withStyles ( https://www.npmjs.com/package/withstyles ) and you have the following file structure:
 
    componentName
-      -> index.js
-      -> styles.css
+   
+      index.js
+      
+      styles.css
       
       
       
