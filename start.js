@@ -2,10 +2,10 @@ import fs from 'fs';
 import path from 'path';
 import css from 'css';
 
-import { startGatheringData, startGatheringCss } from './utils';
+import { processJs, processCss } from './utils';
 import { createCssJsSiblingStructure } from './traverse';
 
-//createCssJsSiblingStructure();
+createCssJsSiblingStructure();
 
 let jsFilePath = 'index.js';
 let completeJsPath = path.join(__dirname, 'files/ReviewComp', jsFilePath);
@@ -13,33 +13,9 @@ let completeJsPath = path.join(__dirname, 'files/ReviewComp', jsFilePath);
 let cssFilePath = 'styles.css';
 let completeCssPath = path.join(__dirname, 'files/ReviewComp', cssFilePath);
 
-function processJs(){
-	return new Promise((resolve, reject) => {
-		fs.readFile(completeJsPath, {encoding: 'utf-8'}, function(err, data){
-			if(!err){
-				resolve(startGatheringData(data));
-			} else {
-				reject(err);
-			}
-		});	
-	});
-}
-
-function processCss(){
-	return new Promise((resolve, reject) => {
-		fs.readFile(completeCssPath, {encoding: 'utf-8'}, function(err, data){
-			if(!err){
-				resolve(startGatheringCss(data));
-			} else {
-				reject(err);
-			}
-		});	
-	});
-}
-
 async function start(){
-	let cssDataSet = await processCss();
-	let jsDataSet = await processJs();
+	let cssDataSet = await processCss(completeJsPath);
+	let jsDataSet = await processJs(completeCssPath);
 	
 	//find styles which are not used in jsx
 	let unusedClasses = [];
@@ -72,7 +48,7 @@ async function start(){
 	console.log(emptyClasses);
 }
 
-start();
+//start();
 
 
 

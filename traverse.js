@@ -8,13 +8,12 @@ let pathToContainer = 'files/ReviewComp';
 let completeJsPath = path.join(__dirname, pathToContainer, jsFilePath);
 
 //Don't change this part - this is the path which contains all the files
-let dirPath = path.join(__dirname, 'files');
+let dirPath = path.join(__dirname, 'files/ReviewComp');
 let identifyJsFiles = /\.js/
 let identifyCssFiles = /\.css/
 
-function isThereACssAsDependencyAt1stLevel(obj){
+export function isThereACssAsDependencyAt1stLevel(obj){
 	let key = obj && Object.keys(obj);
-
 	if(key && key.length === 1) {
 		key = key[0];
 		let isKeyValidJS = identifyJsFiles.test(key);
@@ -39,7 +38,6 @@ function isThereACssAsDependencyAt1stLevel(obj){
 		} else
 			return false;
 	}
-
 	return false;
 }
 
@@ -73,6 +71,16 @@ function findCompleteJsCssPairs(obj) {
 
 	traverseTree(obj);
 	return allPairs;
+}
+
+export function buildDependencyTree(completeFilePath, completeDirPath) {
+	if(!completeDirPath)
+		completeDirPath = path.join(__dirname, 'files');
+
+	return dT({
+		filename: completeFilePath,
+		directory: completeDirPath
+	});
 }
 
 export function createCssJsSiblingStructure(){

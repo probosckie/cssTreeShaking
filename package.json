@@ -4,17 +4,22 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node test.js",
+    "test": "node test/test.js",
     "start": "npx babel-node start.js",
-    "traverse": "node traverse.js"
+    "traverse": "node traverse.js",
+    "replace": "npx babel-node replace.js",
+    "server": "npx babel-node expressServer.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "codemirror": "^5.45.0",
     "css": "^2.2.4",
     "dependency-tree": "^7.0.2",
-    "precinct": "^6.1.2"
+    "express": "^4.16.4",
+    "precinct": "^6.1.2",
+    "socket.io": "^2.2.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
