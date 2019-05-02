@@ -35,7 +35,7 @@ function startCrawling(fnPaths) {
 				for (let v of fileStructure.dependencies){
 					if(!(v.js in allCrawled)) {
 						await getAllCssRules(v.css, cssDump);
-						allCrawled[v.js] = {
+						allCrawled[v.js] = { 
 							count: 1,
 							is_S_used_in_jsx: v.is_S_used_in_jsx
 						}
