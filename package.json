@@ -4,11 +4,13 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "node test/test.js",
-    "start": "npx babel-node start.js",
-    "traverse": "node traverse.js",
-    "replace": "npx babel-node replace.js",
-    "server": "npx babel-node expressServer.js"
+    "test": "npx babel-node test/test.js",
+    "start": "npx babel-node server/start.js",
+    "traverse": "npx babel-node server/traverse.js",
+    "replace": "npx babel-node server/replace.js",
+    "server": "nodemon --ignore 'client/*' --exec babel-node server/expressServer.js",
+    "gather": "nodemon --ignore 'client/*' --ignore 'css.json' --ignore 'fileParsed.json' --exec babel-node server/cssGather.js",
+    "sass": "npx babel-node server/sassAst.js"
   },
   "keywords": [],
   "author": "",
@@ -18,6 +20,8 @@
     "css": "^2.2.4",
     "dependency-tree": "^7.0.2",
     "express": "^4.16.4",
+    "nodemon": "^1.18.10",
+    "postcss": "^7.0.14",
     "precinct": "^6.1.2",
     "socket.io": "^2.2.0"
   },
