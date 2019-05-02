@@ -35,7 +35,7 @@ export function isThereACssAsDependencyAt1stLevel(obj){
 		if(validCssFileName){
 			return {
 				js:key,
-				css:validCssFileName
+				css:validCssFileName 
 			};
 		} else
 			return false;
