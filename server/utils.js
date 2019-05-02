@@ -35,7 +35,7 @@ function findMultipleOccurencesOf(v) {
 		found = classNameRegex.exec(newStr);
 		if(found){
 			occurrencesInLine.push(oldLength + found.index + found[0].length - 1);
-			oldLength = oldLength + found.index + found[0].length;
+			oldLength = oldLength + found.index + found[0].length; 
 		}
 	} while(found);
 	return occurrencesInLine;
