@@ -36,7 +36,7 @@ function newConnection(socket) {
 		let fullName = createFullFileName(filePath);
 		let content = await getContent(fullName);
 		io.sockets.emit('fileSourceJs', content);
-		io.sockets.emit('setFullPathJs', fullName);
+		io.sockets.emit('setFullPathJs', fullName); 
 		if(cssDependency){
 			content = await getContent(cssDependency);
 			io.sockets.emit('fileSourceCss', content);
