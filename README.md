@@ -23,6 +23,8 @@ And you importing styles.css object into index and returning a HOC from index.js
 
 # problems faced in codebase
 
+# empty or unused styles
+
 1. Stylessheets will keep on increasing in size - since no developer will ever delete any style rule. This can cause:
 
    a. Unused classes  - which are declared in css - but not used in index.js
@@ -35,8 +37,16 @@ And you importing styles.css object into index and returning a HOC from index.js
 
 The nodejs script - server/start.js
  
- can traverse your filesystem from a starting point and find out all such dependent siblings of index.js and styles.css . Then, there is a pruning script which will tell you above problems.
+ can traverse your filesystem from a starting point and find out all such dependent siblings of index.js and styles.css.
+There is also a websockets based ui - (starting by script)
 
+npm run server
+
+- which will load this in a UI and highlight all lines which have this problem - and then you can manually delete those lines and commit this change to the actual files.
+
+
+
+# redeclaration of common styles - repeated styles increasing the css file size
 
 2. Every developer is creating their own styles in styles.css, since there is no global style availble. Common style and properties are getting repeated and since no developer is aware of what other is writing - common styles are getting repeated.
 
@@ -45,9 +55,14 @@ The nodejs script - server/start.js
 
 We can crawl the source code and find the common styles by traversing all the css files used in the project
 
-If you update server/cssGather.js - with a list of entry point containers - then it will crawl and find all the css styles and distinct property counts from your entire codebase - it will update the file css.json.
 
+update: server/cssGather.js  - line 15 - variable: pathsToSeeds with a list of entry point containers - 
 
+then run script
+
+npm run gather
+
+ then it will crawl and find all the css styles and distinct property counts from your entire codebase - it will update the file css.json - with this css meta info.
 
 # Next steps
 
