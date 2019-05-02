@@ -33,7 +33,7 @@ function extractCssProp(obj, acc){
 function decorateCss(seed, acc = {}){
 	if(seed.nodes && seed.nodes.length){
 		seed.nodes.forEach(v => {
-			if(v.type === 'decl')
+			if(v.type === 'decl') 
 				extractCssProp(v, acc);
 			else if(v.type === 'rule')
 				decorateCss(v, acc);
