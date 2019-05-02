@@ -1,4 +1,5 @@
 # cssTreeShaking
+
 A project to statically analyse and prune redundant classname declarations and create a custom library of global styles
 
 
@@ -34,7 +35,17 @@ Then you can have this problem that
  To work out these problems - this nodejs script can traverse your filesystem from a starting point and find out all such dependent siblings of index.js and styles.css . Then, there is a pruning script which will tell you about problems occuring in [a, b, c]
  
  
- This is work in progress and I will keep updating.
+ 
+
+ 
+# Current Progress  - Moving redundant styles to global
+
+If you update server/cssGather.js - with a list of entry point containers - then it will crawl and find all the css styles and distinct property counts from your entire codebase - it will update the file css.json.
+
+from this we can create global styles file.
+
+ 
+ 
    
    
   
