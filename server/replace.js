@@ -27,5 +27,5 @@ getContent(pathToJsFile).then((d) => {
 		console.log('the file is modifiled');
 	})
 
-}).catch(e => console.log(e))
+}).catch(e => console.log(e)) 
 
