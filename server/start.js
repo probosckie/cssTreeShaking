@@ -33,7 +33,7 @@ async function start(){
 	let notDefinedClasses = [];
 	for(let i in jsDataSet){
 		if(!(`.${i}` in cssDataSet))
-			notDefinedClasses.push(i);
+			notDefinedClasses.push(i); 
 	}
 
 	console.log('Classes defined in jsx but don\'t have definition in css ');
