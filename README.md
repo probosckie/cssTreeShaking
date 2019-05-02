@@ -3,6 +3,8 @@
 A project to statically analyse and prune redundant classname declarations and create a custom library of global styles
 
 
+# project structure - target
+
 If you are using React 15 and using withStyles ( https://www.npmjs.com/package/withstyles ) and you have the following file structure:
 
    componentName
@@ -19,31 +21,39 @@ And you importing styles.css object into index and returning a HOC from index.js
   
   
 
-Then you can have this problem that 
+# problems faced in codebase
 
-1. Every developer is creating their own styles in styles.css, since there is no global style availble. 
-2. Stylessheets will keep on increasing in size - since no developer will ever delete any style rule. This can cause:
+1. Stylessheets will keep on increasing in size - since no developer will ever delete any style rule. This can cause:
 
    a. Unused classes  - which are declared in css - but not used in index.js
    
    b. Classes defined in jsx but don't have definition in css 
    
    c. Empty classes in styles.css (which have no body)
-   
-   
- 
- To work out these problems - this nodejs script can traverse your filesystem from a starting point and find out all such dependent siblings of index.js and styles.css . Then, there is a pruning script which will tell you about problems occuring in [a, b, c]
- 
- 
- 
 
+# solution to this problem
+
+The nodejs script - server/start.js
  
-# Current Progress  - Moving redundant styles to global
+ can traverse your filesystem from a starting point and find out all such dependent siblings of index.js and styles.css . Then, there is a pruning script which will tell you above problems.
+
+
+2. Every developer is creating their own styles in styles.css, since there is no global style availble. Common style and properties are getting repeated and since no developer is aware of what other is writing - common styles are getting repeated.
+
+
+# solution to this problem
+
+We can crawl the source code and find the common styles by traversing all the css files used in the project
 
 If you update server/cssGather.js - with a list of entry point containers - then it will crawl and find all the css styles and distinct property counts from your entire codebase - it will update the file css.json.
 
-from this we can create global styles file.
 
+
+# Next steps
+
+1. Creation of a css file containing common css classes (whose counts are high) - creating a nodejs input/ouput program which will ask for a name of a particular class and then use declare that classs in a file.
+
+2. replacing of style declarations in js files - from s.class (local definition) to a global class string.
  
  
    
