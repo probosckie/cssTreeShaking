@@ -14,8 +14,7 @@ If you are using React 15 and using withStyles ( https://www.npmjs.com/package/w
       styles.css
       
       
-      
-And you importing styles.css object into index and returning a HOC from index.js:
+A single js file - will import only a single style file to wrap styles from and return a HOC from withStyles
 
   export default withStyles(s)(ComponentName);
   
