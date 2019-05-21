@@ -2,7 +2,7 @@
 
 A project to 
     
-    1. statically analyse and prune redundant classname declarations 
+    1. statically analyse and prune empty or unused classname declarations from react jsx and styles file
     
     2. create a custom library of global styles
     
