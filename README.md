@@ -1,6 +1,12 @@
 # cssTreeShaking
 
-A project to statically analyse and prune redundant classname declarations and create a custom library of global styles
+A project to 
+    
+    1. statically analyse and prune redundant classname declarations 
+    
+    2. create a custom library of global styles
+    
+    3. automatically remove duplicate style values and replace jsx with global classname
 
 
 # project structure - target
