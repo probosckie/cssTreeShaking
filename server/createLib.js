@@ -9,9 +9,13 @@ let pathToCssDump = '../cssSmall.json';
 let pathToLastLeft = '../lastLeft.json';
 let result = '../result.css';
 
+let resultJson = '../cssResult.json';
+
 pathToCssDump = path.join(__dirname, pathToCssDump);
 pathToLastLeft = path.join(__dirname, pathToLastLeft);
 result = path.join(__dirname, result);
+
+resultJson = path.join(__dirname, resultJson);
 
 
 function createNames() {
@@ -24,6 +28,10 @@ function createNames() {
 		lastLeftKey = JSON.parse(lastLeftKey);
 
 		existing = await getContent(result);
+
+		let resultJsonString = await getContent(resultJson);
+
+		resultJsonString = JSON.parse(resultJsonString);
 
 		let keys = Object.keys(cssDump);
 
@@ -40,14 +48,19 @@ function createNames() {
 
 		set = Object.keys(cssDump[keys[currentPropertyIndex]]);
 
-		rl.setPrompt(`Press abort to abort \n Give className for Property: ${keys[currentPropertyIndex]} \n Value: ${set[currentValueIndex]}\n`);
+		rl.setPrompt(`Press abort to abort \n Give className for Property: ${keys[currentPropertyIndex]} \n Value: ${set[currentValueIndex]}\n Count: ${cssDump[keys[currentPropertyIndex]][set[currentValueIndex]]} \n  `);
 		rl.prompt();
 		rl.on('line', function(line) {
 	    if (line === "abort") 
 	    	rl.close();
 	    else {
-	    	if(line !== 'skip')
+	    	if(line !== 'skip'){
 	    		classString += `.${line} { \n ${keys[currentPropertyIndex]} : ${set[currentValueIndex]} \n } \n`;
+	    		if(!(keys[currentPropertyIndex] in resultJsonString)){
+	    			resultJsonString[keys[currentPropertyIndex]] = {};
+	    		} 
+	    		resultJsonString[keys[currentPropertyIndex]][set[currentValueIndex]] = line;
+	    	}
 	    }
 
 	    currentValueIndex = currentValueIndex + 1;
@@ -72,6 +85,8 @@ function createNames() {
 		    	lastPropertyIndex: currentPropertyIndex,
 		    	lastStyleIndex: currentValueIndex
 		    }));
+
+		    writeToFile(resultJson, JSON.stringify(resultJsonString));
 		});	
 	}
 	x();
