@@ -54,7 +54,7 @@ function createNames() {
 	    if (line === "abort") 
 	    	rl.close();
 	    else {
-	    	if(line !== 'skip'){
+	    	if(line !== 's'){
 	    		classString += `.${line} { \n ${keys[currentPropertyIndex]} : ${set[currentValueIndex]} \n } \n`;
 	    		if(!(keys[currentPropertyIndex] in resultJsonString)){
 	    			resultJsonString[keys[currentPropertyIndex]] = {};
@@ -76,7 +76,7 @@ function createNames() {
 	    	set = cssDump[keys[currentPropertyIndex]] && Object.keys(cssDump[keys[currentPropertyIndex]]);
 	    }
 	    if(set){
-	    	rl.setPrompt(`Press abort to abort \n skip to skip property \n Give className for Property: ${keys[currentPropertyIndex]} \n Value: ${set[currentValueIndex]}\n`);
+	    	rl.setPrompt(`Press abort to abort \n s to skip property \n Give className for Property: ${keys[currentPropertyIndex]} \n Value: ${set[currentValueIndex]}\n Count: ${cssDump[keys[currentPropertyIndex]][set[currentValueIndex]]} \n`);
 	    	rl.prompt();	
 	    }
 		}).on('close', function(){
