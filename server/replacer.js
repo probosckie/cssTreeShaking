@@ -2,6 +2,8 @@
 This script will be able to replace direct css and present choices to user via a WS ui.
 */
 
+
+
 import fs from 'fs';
 import path from 'path';
 import pc from 'postcss'
@@ -21,33 +23,58 @@ jsFile = path.join(__dirname, jsFile);
 cssFile = path.join(__dirname, cssFile);
 
 
-function isClassNamePresentInSelectorString(className, selectorString){
-	let isMany = selectorString.includes(',');
-	if(isMany)
-		
-
+function isClassNamePresentInSelectorString(className, selectorString) {
+	className = '.' + className;
+	for(let v of selectorString.split(',')){
+		if(v.trim() === className)
+			return true;
+	}
+	return false;
 }
 
-function findClassLevel(selectorName, root){
-	let level = 0;
-
+function findMaxClassLevel(selectorName, root){
+	let leafLevel = -1;
 	function recurseFind(seed, level){
-		if(seed.selector && seed.selector === selectorName)
+		let result;
+		if(seed.selector){
+			result = isClassNamePresentInSelectorString(selectorName, seed.selector);
+			if(result && level > leafLevel){
+				leafLevel = level;
+				console.log('changed!');
+			}
+		}
+		if(seed.nodes){
+			seed.nodes.forEach(v => recurseFind(v, level+1));
+		}
 	}
 
 	recurseFind(root, 0);
+	return leafLevel;
 }
 
 function isClassInSassBlock(c, tree){
+	let leafLevel = findMaxClassLevel(c, tree);
 
+	//console.log('found at level ' + leafLevel);
+	if(leafLevel === 1)
+		return false;
+
+
+	if(leafLevel === -1)
+		return 'notFound';
+
+	return true;
 }
 
 function isClassSplittable(className, postCssTree) {
 	let isSplittable = true;
 
-	isSplittable = !isClassInSassBlock(className, postCssTree);
+	isSplittable = isClassInSassBlock(className, postCssTree);
 
-	if(!isSplittable)
+	if(isSplittable === 'notFound')
+		return false;
+	
+	else if(isSplittable)
 		return false;
 	else
 		return true;
@@ -101,7 +128,7 @@ async function start(){
 function test(){
 	//let cssContent = await getContent(writeCssFile);
 	//let rule = pc.parse(cssContent);
-	console.log('Is class in sass block');
+	console.log('Is class splittable');
 	console.log(isClassSplittable('filterHeading', pcTree));
 }
 
