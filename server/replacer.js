@@ -36,21 +36,46 @@ function findMaxClassLevel(selectorName, root){
 	let leafLevel = -1;
 	function recurseFind(seed, level){
 		let result;
-		if(seed.selector){
-			result = isClassNamePresentInSelectorString(selectorName, seed.selector);
-			if(result && level > leafLevel){
-				leafLevel = level;
-				console.log('changed!');
+		let isAtRule = seed.type === 'atrule' && seed.name === 'media';
+
+		if(!isAtRule){
+			if(seed.selector){
+				result = isClassNamePresentInSelectorString(selectorName, seed.selector);
+				if(result && level > leafLevel){
+					leafLevel = level;
+				}
 			}
-		}
-		if(seed.nodes){
-			seed.nodes.forEach(v => recurseFind(v, level+1));
-		}
+			if(seed.nodes){
+				seed.nodes.forEach(v => recurseFind(v, level+1));
+			}	
+		}		
 	}
 
 	recurseFind(root, 0);
 	return leafLevel;
 }
+
+function findClassInMQ(c, root){
+	let isFoundInMediaQuery = false;
+
+	function recurseFind(seed, isInsideMedia){
+		let result;
+		let isAtRule = seed.type === 'atrule' && seed.name === 'media';	
+		if(seed.selector){
+			result = isClassNamePresentInSelectorString(c, seed.selector);
+			if(result && isInsideMedia){
+				isFoundInMediaQuery = true;
+			}
+		}
+		if(seed.nodes){
+			seed.nodes.forEach(v => recurseFind(v, isInsideMedia || isAtRule));
+		}	
+	}
+	recurseFind(root, false);
+	return isFoundInMediaQuery;
+}
+
+
 
 function isClassInSassBlock(c, tree){
 	let leafLevel = findMaxClassLevel(c, tree);
@@ -66,6 +91,12 @@ function isClassInSassBlock(c, tree){
 	return true;
 }
 
+
+
+function isClassInMediaQuery(c, tree){
+	let result = findClassInMQ(c, tree);
+}
+
 function isClassSplittable(className, postCssTree) {
 	let isSplittable = true;
 
@@ -74,17 +105,16 @@ function isClassSplittable(className, postCssTree) {
 	if(isSplittable === 'notFound')
 		return false;
 	
-	else if(isSplittable)
+	if(isSplittable)
+		return false;
+	
+	isSplittable = isClassInMediaQuery(className, postCssTree);
+
+	if(isSplittable)
 		return false;
 	else
-		return true;
-
-	//code this later
-	/*isSplittable = !isClassInMediaQuery(className, postCssTree);
-
-	if(!isSplittable)
-		return false;
-
+		console.log('Class is not in sass block and media query -  only name test remaining');
+	/*
 	isSplittable = !isClassComplexSelector(className, postCssTree);
 
 	return isSplittable;*/
@@ -120,7 +150,7 @@ async function start(){
 
 	pcTree = rule;
 	test();
-	//await writeToFile(writeCssFile, JSON.stringify(rule));
+	//await writeToFile(writeCssFile, JSON.stringify(modified));
 	//console.log('file written');
 }
 
@@ -128,7 +158,7 @@ async function start(){
 function test(){
 	//let cssContent = await getContent(writeCssFile);
 	//let rule = pc.parse(cssContent);
-	console.log('Is class splittable');
+	console.log('Is class splittable ??');
 	console.log(isClassSplittable('filterHeading', pcTree));
 }
 
