@@ -73,6 +73,10 @@ npm run gather
 
 1. Creation of a css file containing common css classes (whose counts are high) - creating a nodejs input/ouput program which will ask for a name of a particular class and then use declare that classs in a file.
 
+You can get the analzed css counts from running - server/cssGather.js - result will be css.json file
+You can start creating classnames of global classes - by running - server/createLib.js - this will start an input output program to set names of global classes
+
+
 2. replacing of style declarations in js files - from s.class (local definition) to a global class string.
  
  
