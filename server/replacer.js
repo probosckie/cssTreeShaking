@@ -1,13 +1,10 @@
 /*
 This script will be able to replace direct css and present choices to user via a WS ui.
 */
-
-
-
 import fs from 'fs';
 import path from 'path';
 import pc from 'postcss'
-import { getContent, writeToFile, extractAllClasses, getAllCssRules } from './utils';
+import { getContent, writeToFile, extractAllClasses, getAllCssRules, isClassPartOfComplexString } from './utils';
 
 
 let jsFile = '../files/src/components/Bus/BusReviews/index.js';
@@ -21,7 +18,6 @@ writeCssFile = path.join(__dirname, writeCssFile);
 
 jsFile = path.join(__dirname, jsFile);
 cssFile = path.join(__dirname, cssFile);
-
 
 function isClassNamePresentInSelectorString(className, selectorString) {
 	className = '.' + className;
@@ -80,7 +76,7 @@ function findClassInMQ(c, root){
 function isClassInSassBlock(c, tree){
 	let leafLevel = findMaxClassLevel(c, tree);
 
-	//console.log('found at level ' + leafLevel);
+	
 	if(leafLevel === 1)
 		return false;
 
@@ -91,11 +87,6 @@ function isClassInSassBlock(c, tree){
 	return true;
 }
 
-
-
-function isClassInMediaQuery(c, tree){
-	let result = findClassInMQ(c, tree);
-}
 
 function isClassSplittable(className, postCssTree) {
 	let isSplittable = true;
@@ -108,7 +99,9 @@ function isClassSplittable(className, postCssTree) {
 	if(isSplittable)
 		return false;
 	
-	isSplittable = isClassInMediaQuery(className, postCssTree);
+	isSplittable = findClassInMQ(className, postCssTree);
+
+	//console.log('found in media query' +  isSplittable);
 
 	if(isSplittable)
 		return false;
@@ -164,6 +157,44 @@ function test(){
 
 
 //test();
-start();
+//start();
 
+
+function isClassnamePartOfComplexSelectorRule(className, selector) {
+	selector = selector.trim();
+	let charlastTest, test, match, charStartTest;
+
+	test = false;
+
+	for(;;){
+		match = selector.indexOf(className);
+
+		if(match == -1)
+			break;
+
+		charlastTest = selector[match + className.length];
+		if(match !== 0){
+			charStartTest = selector[match - 1];
+			test = isClassPartOfComplexString(charStartTest)
+			if(test)
+				break;
+		}
+
+		test = isClassPartOfComplexString(charlastTest);
+
+		if(test)
+			break;
+
+		selector = selector.substring(match + className.length);
+		
+		if(selector === '')
+			break;
+	}
+	return test;
+}
+
+let className = '.d', selectorName = '.abcd:nth-child(1) .d.a';
+
+console.log('is '+className + ' a part of complex selector Rule : '+ selectorName);
+console.log(isClassnamePartOfComplexSelectorRule(className,selectorName));
 
