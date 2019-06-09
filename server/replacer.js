@@ -21,11 +21,49 @@ cssFile = path.join(__dirname, cssFile);
 
 function isClassNamePresentInSelectorString(className, selectorString) {
 	className = '.' + className;
+	let exactMatchTest, complexSelectorTest;
 	for(let v of selectorString.split(',')){
-		if(v.trim() === className)
+		exactMatchTest = (v.trim() === className);
+		complexSelectorTest = isClassnamePartOfComplexSelectorRule(className, v.trim())
+		if(exactMatchTest || complexSelectorTest)
 			return true;
 	}
 	return false;
+}
+
+
+
+function isClassnamePartOfComplexSelectorRule(className, selector) {
+	selector = selector.trim();
+	let charlastTest, test, match, charStartTest;
+	
+	test = false;
+
+	for(;;){
+		match = selector.indexOf(className);
+
+		if(match == -1)
+			break;
+
+		charlastTest = selector[match + className.length];
+		if(match !== 0){
+			charStartTest = selector[match - 1];
+			test = isClassPartOfComplexString(charStartTest)
+			if(test)
+				break;
+		}
+
+		test = isClassPartOfComplexString(charlastTest);
+
+		if(test)
+			break;
+
+		selector = selector.substring(match + className.length);
+		
+		if(selector === '')
+			break;
+	}
+	return test;
 }
 
 function findMaxClassLevel(selectorName, root){
@@ -76,10 +114,8 @@ function findClassInMQ(c, root){
 function isClassInSassBlock(c, tree){
 	let leafLevel = findMaxClassLevel(c, tree);
 
-	
 	if(leafLevel === 1)
 		return false;
-
 
 	if(leafLevel === -1)
 		return 'notFound';
@@ -88,8 +124,31 @@ function isClassInSassBlock(c, tree){
 }
 
 
+function checkForTopLevelComplex(c, tree) {
+	let complex = false, exactMatch = false;
+	let temp;
+	c = `.${c}`;
+
+	for(let v of tree.nodes){
+		if(v.type !== 'atrule' && v.selector){
+			for(let temp of v.selector.split(',')){
+				if(temp.trim === c)
+					exactMatch = true;
+				if(isClassnamePartOfComplexSelectorRule(c, v))
+					return { complex: true }
+			}	
+		}
+	}
+	
+	return {
+		complex, exactMatch
+	}	
+}
+
+
 function isClassSplittable(className, postCssTree) {
 	let isSplittable = true;
+	let result;
 
 	isSplittable = isClassInSassBlock(className, postCssTree);
 
@@ -101,16 +160,17 @@ function isClassSplittable(className, postCssTree) {
 	
 	isSplittable = findClassInMQ(className, postCssTree);
 
-	//console.log('found in media query' +  isSplittable);
-
 	if(isSplittable)
 		return false;
-	else
-		console.log('Class is not in sass block and media query -  only name test remaining');
-	/*
-	isSplittable = !isClassComplexSelector(className, postCssTree);
-
-	return isSplittable;*/
+	else {
+		result = checkForTopLevelComplex(className, postCssTree);
+		if(result.complex)
+			return false;
+		else if (result.exactMatch)
+			return true;
+		else
+			return "empty class";
+	}
 }
 
 
@@ -156,45 +216,6 @@ function test(){
 }
 
 
-//test();
+test();
 //start();
-
-
-function isClassnamePartOfComplexSelectorRule(className, selector) {
-	selector = selector.trim();
-	let charlastTest, test, match, charStartTest;
-
-	test = false;
-
-	for(;;){
-		match = selector.indexOf(className);
-
-		if(match == -1)
-			break;
-
-		charlastTest = selector[match + className.length];
-		if(match !== 0){
-			charStartTest = selector[match - 1];
-			test = isClassPartOfComplexString(charStartTest)
-			if(test)
-				break;
-		}
-
-		test = isClassPartOfComplexString(charlastTest);
-
-		if(test)
-			break;
-
-		selector = selector.substring(match + className.length);
-		
-		if(selector === '')
-			break;
-	}
-	return test;
-}
-
-let className = '.d', selectorName = '.abcd:nth-child(1) .d.a';
-
-console.log('is '+className + ' a part of complex selector Rule : '+ selectorName);
-console.log(isClassnamePartOfComplexSelectorRule(className,selectorName));
 
