@@ -23,6 +23,11 @@ export function isStartOrEndOfClass(str){
 	return str === ' ' || str === ',' || str === ']' || str === ':' || str === ')' || str === '{' || str === '}'  || !str || str === '\t';
 }
 
+export function isClassPartOfComplexString(str){
+	return str === ' ' || str === ']' || str === '[' ||str === ':' || str === ')' || str === '>' || str === '<' || str === '\t' || str == '.' || str === '#';
+}
+
+
 export function isAlphaBetic(f){
 	return (f >= 'a' && f <= 'z') || (f >= 'A' && f <= 'Z')
 }
