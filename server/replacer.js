@@ -14,6 +14,7 @@ let cssRuleFile = '../cssResult.json';
 
 jsFile = path.join(__dirname, jsFile);
 cssFile = path.join(__dirname, cssFile);
+cssRuleFile = path.join(__dirname, cssRuleFile);
 
 let pcTree;
 
@@ -144,8 +145,9 @@ function recurseFindComplex(c, tree){
 	return true;
 }
 
-async function start(){
+async function start() {
 	let jsContent = await getContent(jsFile);
+	let cssClassNames = await getContent(cssRuleFile);
 	let test, lines = jsContent.split('\n');
 	let classes = extractAllClasses(lines, true, 's');
 	if(classes)
@@ -177,8 +179,26 @@ async function start(){
 		}
 	}
 
-	
-	//console.log(parsedStylesForClasses);
+	cssClassNames = JSON.parse(cssClassNames);
+	let breakdownObject = {};
+
+	for(let i in parsedStylesForClasses) {
+		breakdownObject[i] = {};
+		let inspectEle = parsedStylesForClasses[i];
+		for(let j in inspectEle){
+			let value = inspectEle[j];
+			if(j in cssClassNames && value in cssClassNames[j]){
+				if(!breakdownObject[i].classes)
+					breakdownObject[i].classes = [];
+				breakdownObject[i].classes.push(cssClassNames[j][value]);
+			} else {
+				if(!breakdownObject[i].base)
+					breakdownObject[i].base = {};
+				breakdownObject[i].base[j] = value;
+			}
+		}
+	}
+	console.log(JSON.stringify(breakdownObject));
 }
 
 
