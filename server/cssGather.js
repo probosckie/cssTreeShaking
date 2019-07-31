@@ -3,12 +3,14 @@ import path from 'path';
 import { returnAllDependencies } from './traverse';
 import { getContent, getCssFileName, findCssReferenceObjectName, extractAllClasses, processCss, returnAllDistinctCssProps, getAllCssRules } from './utils';
 
+let pathToJsFile = '../files/src/containers/Bus/ConfirmPage/index.js';
 let pathToDataFile = '../data.json';
 let pathToCssDump = '../css.json';
 let pathToCrawledFiles = '../fileParsed.json';
 
 
 pathToDataFile = path.join(__dirname, pathToDataFile); 
+pathToJsFile = path.join(__dirname, pathToJsFile);
 pathToCssDump = path.join(__dirname, pathToCssDump)
 pathToCrawledFiles = path.join(__dirname, pathToCrawledFiles);
 
@@ -35,7 +37,7 @@ function startCrawling(fnPaths) {
 				for (let v of fileStructure.dependencies){
 					if(!(v.js in allCrawled)) {
 						await getAllCssRules(v.css, cssDump);
-						allCrawled[v.js] = { 
+						allCrawled[v.js] = {
 							count: 1,
 							is_S_used_in_jsx: v.is_S_used_in_jsx
 						}
@@ -83,6 +85,7 @@ async function buildWhatWeNeed(fPath) {
 		v.classNames_used_in_css = allClasses;
 		
 	}
+	//console.log(JSON.stringify(dep));
 	result.dependencies = dep;
 	return result;
 }
