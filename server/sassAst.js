@@ -1,10 +1,15 @@
 import fs from 'fs';
 import path from 'path';
 import pc from 'postcss'
-import { getContent, writeToFile, returnAllDistinctCssProps } from './utils';
+import { getContent, writeToFile, returnAllDistinctCssProps, findLineNumbersForClassInJs } from './utils';
 
 
 let fileName = '../files/styles2.css';
+
+let jsFile = "../files/index2.js";
+
+jsFile = path.join(__dirname, jsFile);
+
 
 //let writeFile = '../ast.json';
 
@@ -33,7 +38,7 @@ function extractCssProp(obj, acc){
 function decorateCss(seed, acc = {}){
 	if(seed.nodes && seed.nodes.length){
 		seed.nodes.forEach(v => {
-			if(v.type === 'decl') 
+			if(v.type === 'decl')
 				extractCssProp(v, acc);
 			else if(v.type === 'rule')
 				decorateCss(v, acc);
@@ -42,7 +47,7 @@ function decorateCss(seed, acc = {}){
 }
 
 
-getContent(fileName).then(v => {
+/*getContent(fileName).then(v => {
 	//let x = {};
 	//returnAllDistinctCssProps(v, x);
 	//console.log(x);
@@ -62,10 +67,48 @@ getContent(fileName).then(v => {
 		p.push(decl);
 		//console.log(Object.keys(decl));
 		//console.log(decl.prop);
-	}*/
+	}
 	//writeToFile(writeFile, JSON.stringify(p));
-})
+});*/
 
+export async function findClassLineNumbersInCss(content, className) {
+	//let content = await getContent(fileName);
+	let rule = pc.parse(content);
+	let nodes = rule.nodes;
+	let lineNumber = [];
+	if(nodes && nodes.length){
+		nodes = nodes.filter(v => v.type === 'rule');
+		nodes.forEach(v => {
+			let selectorStr = v.selector;
+			selectorStr = selectorStr.split(',');
+			let foundForThis = false;
+			selectorStr.forEach(v1 => {
+				if(v1.trim() === `.${className}`){
+					if(!foundForThis) {
+						foundForThis = true;
+						lineNumber.push({
+							start: v.source.start.line,
+							end: v.source.end.line
+						});
+					}
+				}
+			});
+		});
+		console.log(lineNumber);
+		return lineNumber;
+		//console.log(lineNumber);
+	}
+}
+
+//findClassLineNumbersInCss(fileName, 'a');
+
+async function start(){
+	let c = await getContent(jsFile);
+	console.log(findLineNumbersForClassInJs('leftReviewPart', c));
+}
+
+
+start();
 
 
 
