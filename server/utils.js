@@ -20,16 +20,15 @@ export function isAbsoluteEndOfClassName(str){
 }
 
 export function isStartOrEndOfClass(str){
-	return str === ' ' || str === ',' || str === ']' || str === ':' || str === ')' || str === '{' || str === '}'  || !str || str === '\t';
+	return str === '[' || str === ' ' || str === ',' || str === ']' || str === ':' || str === ')' || str === '{' || str === '}'  || !str || str === '\t' || str === '(';
+}
+
+export function isAlphaBetic(f){
+	return (f >= 'a' && f <= 'z') || (f >= 'A' && f <= 'Z')
 }
 
 export function isClassPartOfComplexString(str){
 	return str === ' ' || str === ']' || str === '[' ||str === ':' || str === ')' || str === '>' || str === '<' || str === '\t' || str == '.' || str === '#';
-}
-
-
-export function isAlphaBetic(f){
-	return (f >= 'a' && f <= 'z') || (f >= 'A' && f <= 'Z')
 }
 
 
@@ -40,7 +39,7 @@ function findMultipleOccurencesOf(v) {
 		found = classNameRegex.exec(newStr);
 		if(found){
 			occurrencesInLine.push(oldLength + found.index + found[0].length - 1);
-			oldLength = oldLength + found.index + found[0].length; 
+			oldLength = oldLength + found.index + found[0].length;
 		}
 	} while(found);
 	return occurrencesInLine;
@@ -62,7 +61,7 @@ function matchCssObjectRef(str, i, s_ka_replacement){
 	return true;
 }
 
-function findClassesFromLine(str, is_S_used, s_ka_replacement) {
+export function findClassesFromLine(str, is_S_used, s_ka_replacement) {
 	let classes = {}, i, find, newStr, temp, increment;
 	for(i = 0; i < str.length;){
 		increment = false;
@@ -85,7 +84,7 @@ function findClassesFromLine(str, is_S_used, s_ka_replacement) {
 	return classes;
 }
 
-export function extractAllClasses(lines, is_S_used, s_ka_replacement) {
+export function extractAllClasses(lines, is_S_used = true, s_ka_replacement = 's') {
 	if(!Array.isArray(lines))
 		lines = lines.split('\n');
 	let test;
@@ -129,6 +128,7 @@ export function extractAllClasses(lines, is_S_used, s_ka_replacement) {
 			}	
 		}
 	});
+	//console.log('all strings are', completeStrings);
 	completeStrings.forEach(v => {
 		temp = findClassesFromLine(v, is_S_used, s_ka_replacement);
 		allClasses = Object.assign({}, allClasses, temp);
@@ -362,6 +362,24 @@ export function findLineNumbersForClassInCss(className, content) {
 			let lcm = regex.exec(v);
 			if(lcm && isAbsoluteEndOfClassName(v[lcm.index + lengthOfClass])){
 				lineNumbers.push(i);
+			}
+		}
+	});
+	return lineNumbers;
+}
+
+export function findLineNumbersForClassInJs(className, content) {
+	let lines = content.split('\n');
+	let lineNumbers = [];
+	let lengthOfClass = className.length + 1;
+
+	let regex = new RegExp("s\."+className);
+
+	lines.forEach((v,i) => {
+		if(regex.test(v)){
+			let lcm = regex.exec(v);
+			if(lcm && isAbsoluteEndOfClassName(v[lcm.index + lengthOfClass + 1])){
+				lineNumbers.push(i+1);
 			}
 		}
 	});
