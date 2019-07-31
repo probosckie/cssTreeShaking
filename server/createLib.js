@@ -48,14 +48,14 @@ function createNames() {
 
 		set = Object.keys(cssDump[keys[currentPropertyIndex]]);
 
-		rl.setPrompt(`Press abort to abort \n Give className for Property: ${keys[currentPropertyIndex]} \n Value: ${set[currentValueIndex]}\n Count: ${cssDump[keys[currentPropertyIndex]][set[currentValueIndex]]} \n  `);
+		rl.setPrompt(`Press abort to abort \n s to skip property \n Give className for Property: ${keys[currentPropertyIndex]} \n Value: ${set[currentValueIndex]}\n Count: ${cssDump[keys[currentPropertyIndex]][set[currentValueIndex]]} \n  `);
 		rl.prompt();
 		rl.on('line', function(line) {
 	    if (line === "abort") 
 	    	rl.close();
 	    else {
 	    	if(line !== 's'){
-	    		classString += `.${line} { \n ${keys[currentPropertyIndex]} : ${set[currentValueIndex]} \n } \n`;
+	    		classString += `.${line} { \n ${keys[currentPropertyIndex]} : ${set[currentValueIndex]} \n}\n`;
 	    		if(!(keys[currentPropertyIndex] in resultJsonString)){
 	    			resultJsonString[keys[currentPropertyIndex]] = {};
 	    		} 
