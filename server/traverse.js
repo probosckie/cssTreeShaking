@@ -35,7 +35,7 @@ export function isThereACssAsDependencyAt1stLevel(obj){
 		if(validCssFileName){
 			return {
 				js:key,
-				css:validCssFileName   
+				css:validCssFileName
 			};
 		} else
 			return false;
@@ -78,7 +78,14 @@ function findCompleteJsCssPairs(obj) {
 
 export function buildDependencyTree(completeFilePath, completeDirPath) {
 	if(!completeDirPath)
-		completeDirPath = path.join(__dirname, 'files');
+		completeDirPath = path.join(__dirname, '../files');
+
+	completeFilePath = createFullFileName(completeFilePath);
+
+	console.log(dT({
+		filename: completeFilePath,
+		directory: completeDirPath
+	}));
 
 	return dT({
 		filename: completeFilePath,
