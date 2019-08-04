@@ -10,7 +10,7 @@
     "replace": "npx babel-node server/replace.js",
     "server": "nodemon --ignore 'client/*' --exec babel-node server/expressServer.js",
     "gather": "nodemon --ignore 'client/*' --ignore 'css.json' --ignore 'fileParsed.json' --exec babel-node server/cssGather.js",
-    "sass": "npx babel-node server/sassAst.js"
+    "sass": "npx babel-node server/sassAst.js" 
   },
   "keywords": [],
   "author": "",
