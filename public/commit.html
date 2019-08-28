@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Css Tree shaking tool</title>
+  
+  <link rel=stylesheet href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.10.0/codemirror.css">
+  <!-- <link rel=stylesheet href="docs.css"> -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.10.0/codemirror.css"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.10.0/mode/javascript/javascript.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.10.0/mode/xml/xml.js"></script>
+  <!-- <script src="jsx.js"></script> -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.10.0/mode/css/css.js"></script>
+
+  <link rel="stylesheet" href="customStyle.css" />
+    
+</head>
+<body>
+  <div>
+
+    <div class='controls'>
+      <div class='width100'>
+        <label>Js File: <input type="text" class='jsfileNameFetch inputField margright15' /></label>
+        <button class='fetchSourceCode myButton margright15'>Load File Source</button>
+        <!-- <button class='highlightSourceCode myButton margright15'>Highlight Classnames</button> -->
+        <label>Css File: <input type="text" class='cssFileName inputField margright15' /></label>
+        <button class='getCssBreakdown myButton margright15'>Get Redundant Classes</button>
+        <button class='startClassFetching myButton margright15' disabled>Fetch next class breakdown</button>
+      </div>
+  
+
+      <div class='width100 marginTop7'>
+        <button class='fixIssues myButton margright15'>Prune Css Classes</button>
+        <button class='marginLeft10 commitChanges myButton margright15'>Commit Changes</button>
+        <div class='info'></div>
+      </div>
+      <div class='cssInfo'></div>
+
+
+    </div>
+    
+    <div class='flexLabel'>
+      <div class='labelHeading'>JS Pane</div>
+      <div class='labelHeading'>Css Pane</div>
+    </div>
+
+    <div class='flex5050'>
+      <div id='editorJs' class='editor'>
+      
+      </div>
+
+
+      <div id='editorCss' class='editor'>
+        
+      </div>  
+
+    </div>    
+  </div>
+
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js'></script>
+  <script src='loadCode.js'></script>
+
+</body>
+</html>
